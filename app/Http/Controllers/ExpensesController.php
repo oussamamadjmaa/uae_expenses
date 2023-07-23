@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Image;
 
 class ExpensesController extends Controller
 {
@@ -76,12 +77,22 @@ class ExpensesController extends Controller
             'file' => 'required|image'
         ]);
 
-        $filePath = $request->file('file')->store('expenses', 'public');
+        $image = $request->file('file');
+        $imageName = time().'.'.$image->extension();
+
+        $destinationPathThumbnail = storage_path('/app/public/expenses');
+        $img = Image::make($image->path());
+
+        $path = $destinationPathThumbnail.'/'.$imageName;
+
+        $img->resize(1100, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save($path);
 
         return Redirect::back()->with([
             'data' => [
-                'path' => $filePath,
-                'url' => Storage::disk('public')->url($filePath)
+                'path' => $path,
+                'url' => Storage::disk('public')->url('expenses/'.$imageName)
             ]
         ]);
     }
