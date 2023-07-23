@@ -91,7 +91,7 @@ class ExpensesController extends Controller
 
         return Redirect::back()->with([
             'data' => [
-                'path' => $path,
+                'path' => 'expenses/'.$imageName,
                 'url' => Storage::disk('public')->url('expenses/'.$imageName)
             ]
         ]);
