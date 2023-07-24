@@ -15,15 +15,16 @@ class ExpensesController extends Controller
 {
     public function index() {
         $now = Carbon::now();
-        $startOfMonth = $now->startOfMonth();
-        $endOfMonth = $now->endOfMonth();
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
 
         $stats = [
             'This Month' => auth()->user()->expenses()->whereBetween('expense_date', [$startOfMonth, $endOfMonth])->sum('amount'),
-            'This Week' => auth()->user()->expenses()->whereBetween('expense_date', [$now->startOfWeek(), $now->endOfWeek()])->sum('amount'),
-            'Last 30 Days' => auth()->user()->expenses()->whereBetween('expense_date', [$now->subMonth(), $now])->sum('amount'),
-            'Last 7 Days' => auth()->user()->expenses()->whereBetween('expense_date', [$now->subWeek(), $now])->sum('amount'),
+            'This Week' => auth()->user()->expenses()->whereBetween('expense_date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount'),
+            'Last 30 Days' => auth()->user()->expenses()->whereBetween('expense_date', [Carbon::now()->subMonth(), Carbon::now()])->sum('amount'),
+            'Last 7 Days' => auth()->user()->expenses()->whereBetween('expense_date', [Carbon::now()->subWeek(), Carbon::now()])->sum('amount'),
         ];
+
 
         return Inertia::render('Expenses/Index', [
             'categories' => auth()->user()->categories()->withSum(['expenses' => fn($q) => $q->whereBetween('expense_date', [$startOfMonth, $endOfMonth])], 'amount')->latest()->get(),
