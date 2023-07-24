@@ -14,12 +14,21 @@ use Image;
 class ExpensesController extends Controller
 {
     public function index() {
-        $startOfMonth = Carbon::now()->startOfMonth();
-        $endOfMonth = Carbon::now()->endOfMonth();
+        $now = Carbon::now();
+        $startOfMonth = $now->startOfMonth();
+        $endOfMonth = $now->endOfMonth();
+
+        $stats = [
+            'This Month' => auth()->user()->expenses()->whereBetween('expense_date', [$startOfMonth, $endOfMonth])->sum('amount'),
+            'This Week' => auth()->user()->expenses()->whereBetween('expense_date', [$now->startOfWeek(), $now->endOfWeek()])->sum('amount'),
+            'Last 30 Days' => auth()->user()->expenses()->whereBetween('expense_date', [$now->subMonth(), $now])->sum('amount'),
+            'Last 7 Days' => auth()->user()->expenses()->whereBetween('expense_date', [$now->subWeek(), $now])->sum('amount'),
+        ];
 
         return Inertia::render('Expenses/Index', [
             'categories' => auth()->user()->categories()->withSum(['expenses' => fn($q) => $q->whereBetween('expense_date', [$startOfMonth, $endOfMonth])], 'amount')->latest()->get(),
             'expenses' => new ExepenseCollection(auth()->user()->expenses()->with('category')->latest('expense_date')->latest()->get()),
+            'stats' => (object) $stats
         ]);
     }
 

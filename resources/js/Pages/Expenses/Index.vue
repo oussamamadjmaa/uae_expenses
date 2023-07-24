@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3'
 import { ref } from 'vue';
 
-const props = defineProps({ categories: Object, expenses: Object })
+const props = defineProps({ categories: Object, expenses: Object, stats: Object })
 
 const editId = ref(null)
 
@@ -87,7 +87,13 @@ const onDelete = (expense) => {
             </form>
         </div>
 
-        <div class="table-responsive mt-4">
+        <div class="my-4">
+            <ul class="mb-0">
+                <li v-for="(stat, statKey) in stats" v-text="`${statKey}: ${stat} Dh`"></li>
+            </ul>
+        </div>
+
+        <div class="table-responsive mt-1">
             <table class="table table-primary">
                 <thead>
                     <tr>
