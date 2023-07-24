@@ -19,6 +19,7 @@ class ExpensesController extends Controller
         $endOfMonth = Carbon::now()->endOfMonth();
 
         $stats = [
+            'Today' => auth()->user()->expenses()->whereDate('expense_date', Carbon::now())->sum('amount'),
             'This Month' => auth()->user()->expenses()->whereBetween('expense_date', [$startOfMonth, $endOfMonth])->sum('amount'),
             'This Week' => auth()->user()->expenses()->whereBetween('expense_date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount'),
             'Last 30 Days' => auth()->user()->expenses()->whereBetween('expense_date', [Carbon::now()->subMonth(), Carbon::now()])->sum('amount'),
