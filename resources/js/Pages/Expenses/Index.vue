@@ -52,7 +52,7 @@ const onDelete = (expense) => {
                 </div>
                 <div class="mb-3">
                     <select class="form-select form-select-lg" v-model="form.category_id">
-                        <option v-for="category in categories" :value="category.id" v-text="`${category.title} (متبقي ${category.monthly_limit - (category.expenses_sum_amount ?? 0)} درهم)`"></option>
+                        <option v-for="category in categories" :value="category.id" v-text="`${category.title}`"></option>
                     </select>
                     <div v-if="form.errors.category_id" class="text-danger">{{ form.errors.category_id }}</div>
                 </div>
@@ -89,7 +89,7 @@ const onDelete = (expense) => {
 
         <div class="my-4">
             <ul class="mb-0">
-                <li v-for="(stat, statKey) in stats" v-text="`${statKey}: ${stat} Dh`"></li>
+                <li v-for="(stat, statKey) in stats" v-text="`${statKey}: ${stat} Dzd`"></li>
             </ul>
         </div>
 
